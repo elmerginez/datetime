@@ -43,27 +43,22 @@
             cursor: pointer;
             display: none;
         }
+        video {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+        }
     </style>
 </head>
 <body onclick="mostrarBoton()">
     <div id="hora"></div>
     <div id="fecha"></div>
     <button id="fullscreen-btn" onclick="activarPantallaCompleta()">Pantalla Completa</button>
+    <video id="hidden-video" loop muted playsinline>
+        <source src="data:video/mp4;base64,AAAAIGZ0eXBtcDQyAAACAGlzbwAAABxtZGF0AAAAAAAANQAAAAEAAQAAAwAAAAAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" type="video/mp4">
+    </video>
     <script>
-        let wakeLock = null;
-
-        async function solicitarWakeLock() {
-            try {
-                wakeLock = await navigator.wakeLock.request('screen');
-                wakeLock.addEventListener('release', () => {
-                    console.log('Wake Lock liberado');
-                });
-                console.log('Wake Lock activado');
-            } catch (err) {
-                console.error(`Error al solicitar Wake Lock: ${err.message}`);
-            }
-        }
-
         function actualizarHora() {
             const ahora = new Date();
             const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -90,7 +85,12 @@
             } else if (document.documentElement.msRequestFullscreen) {
                 document.documentElement.msRequestFullscreen();
             }
-            solicitarWakeLock();
+            reproducirVideoOculto();
+        }
+        
+        function reproducirVideoOculto() {
+            const video = document.getElementById('hidden-video');
+            video.play().catch(err => console.error("Error al reproducir video oculto:", err));
         }
         
         actualizarHora();
