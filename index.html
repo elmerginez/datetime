@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hora en Vivo</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            flex-direction: column;
+            position: relative;
+        }
+        #hora {
+            font-size: 10vw;
+            font-weight: bold;
+        }
+        #fecha {
+            font-size: 3vw;
+            margin-top: 10px;
+            opacity: 0.7;
+        }
+        #fullscreen-btn {
+            position: absolute;
+            bottom: 20px;
+            padding: 10px 20px;
+            background-color: white;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.5vw;
+            cursor: pointer;
+            display: none;
+        }
+    </style>
+</head>
+<body onclick="mostrarBoton()">
+    <div id="hora"></div>
+    <div id="fecha"></div>
+    <button id="fullscreen-btn" onclick="activarPantallaCompleta()">Pantalla Completa</button>
+    <script>
+        function actualizarHora() {
+            const ahora = new Date();
+            const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            
+            document.getElementById('hora').textContent = ahora.toLocaleTimeString('es-ES');
+            document.getElementById('fecha').textContent = ahora.toLocaleDateString('es-ES', opcionesFecha);
+        }
+        
+        function mostrarBoton() {
+            const boton = document.getElementById('fullscreen-btn');
+            boton.style.display = 'block';
+            setTimeout(() => {
+                boton.style.display = 'none';
+            }, 3000);
+        }
+
+        function activarPantallaCompleta() {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+                document.documentElement.msRequestFullscreen();
+            }
+        }
+        
+        actualizarHora();
+        setInterval(actualizarHora, 1000);
+    </script>
+</body>
+</html>
