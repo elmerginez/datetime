@@ -50,6 +50,20 @@
     <div id="fecha"></div>
     <button id="fullscreen-btn" onclick="activarPantallaCompleta()">Pantalla Completa</button>
     <script>
+        let wakeLock = null;
+
+        async function solicitarWakeLock() {
+            try {
+                wakeLock = await navigator.wakeLock.request('screen');
+                wakeLock.addEventListener('release', () => {
+                    console.log('Wake Lock liberado');
+                });
+                console.log('Wake Lock activado');
+            } catch (err) {
+                console.error(`Error al solicitar Wake Lock: ${err.message}`);
+            }
+        }
+
         function actualizarHora() {
             const ahora = new Date();
             const opcionesFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -76,6 +90,7 @@
             } else if (document.documentElement.msRequestFullscreen) {
                 document.documentElement.msRequestFullscreen();
             }
+            solicitarWakeLock();
         }
         
         actualizarHora();
